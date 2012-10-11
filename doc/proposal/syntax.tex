@@ -1,0 +1,184 @@
+\section{Syntax}
+
+This section contains an informal description
+of a syntax for our proposed language.
+The basic appearance of the language is close
+to that of traditional assembly languages.
+Program text is restricted to the ASCII
+character encoding. All constructs are case \textbf{in}sensitive,
+with the exception of labels.
+
+\subsection{Literals}
+
+Integer literals are written in hexadecimal format, with a leading
+``0x". The width (i.e., size) of the literal value is
+inferred from the number of characters. Literals can be 8-bits, 16-bits,
+32-bits or 64-bits wide. This syntax is used for both signed and unsigned values.
+In the generated code, the byte ordering of multi-byte values follows the endianness
+of the target platform.
+
+\begin{table}[h!]
+  \begin{center}
+    \begin{tabular}{|r|l|}
+      \hline
+      \texttt{0x01}               & \ 8-bit integer  \\ \hline
+      \texttt{0x0123}             &   16-bit integer \\ \hline
+      \texttt{0x01234567}         &   32-bit integer \\ \hline
+      \texttt{0x0123456789ABCDEF} &   64-bit integer \\ \hline
+    \end{tabular}
+  \end{center}
+  \caption{Example integer literals}
+\end{table}
+
+Floating point literals are written in decimal format. Single-precision literals
+are written with a single decimal point, while double-precision
+literals with double decimal points.
+
+\begin{table}[h!]
+  \begin{center}
+    \begin{tabular}{|r|l|}
+      \hline
+      \texttt{12.34}  & Single-precision floating point \\ \hline
+      \texttt{12..34} & Double-precision floating point \\ \hline
+    \end{tabular}
+  \end{center}
+  \caption{Example floating point literals}
+\end{table}
+
+\subsection{Labels}
+
+Labels are aliases to addresses in memory.
+Labels are identified by
+one or more letters, numbers or legal symbols (i.e., \texttt{\_.\$}).
+Labels cannot begin with a digit and are case-sensitive.
+Globally-scoped labels can be referenced from any part of the
+program. Locally-scoped labels can only be referenced within
+the function in which they are defined.
+
+\subsection{Global data}
+
+Global data is declared by a label and a colon followed by one or more
+literals. Literals are separated by whitespace. The amount of memory to allocate
+is equal to the sum width of the literals.
+
+\begin{verbatim}
+hello_world_string:
+    0x68 0x65 0x6c 0x6c 0x6f 0x20
+    0x77 0x6f 0x72 0x6c 0x64 0x00
+\end{verbatim}
+
+In the above example, ``hello\_world\_string" is a label that refers
+to the beginning of a 12-byte section of memory that contains
+the ASCII characters of the string ``hello world", ending with the \texttt{NULL} terminator.
+
+\subsection{Registers}
+
+Register references are composed of a percent sign (i.e., \texttt{\%}) followed
+by one or more characters followed by an integer ranging from $1$ to $n$. The characters
+correspond to the type of the register, as shown below.
+
+\begin{table}[h!]
+  \begin{center}
+    \begin{tabular}{|l|l|}
+      \hline
+      b & 8-bit integer         \\ \hline
+      s & 16-bit integer        \\ \hline
+      i & 32-bit integer        \\ \hline
+      l & 64-bit integer        \\ \hline
+      w & word-size integer     \\ \hline
+      f & 32-bit floating point \\ \hline
+      d & 64-bit floating point \\ \hline
+    \end{tabular}
+  \end{center}
+  \caption{Register type identifiers}
+\end{table}
+
+The word type represents the natural data type of the underlying hardware.
+Registers of this type can hold memory addresses, and address arithmetic
+can be performed using instructions that operate on these registers.
+Although the actual width of a word is machine-dependent,
+we define the width of a word, when stored in memory, to be 64-bits.
+
+A separate register bank exists for each register type. The integer
+part of the register reference refers to a specific register
+within the bank of that type. Register references start with 1.
+
+\begin{table}[h!]
+  \begin{center}
+    \begin{tabular}{|l|l|}
+      \hline
+      \texttt{\%b1}  & First 8-bit register               \\ \hline
+      \texttt{\%d11} & Eleventh double-precision register \\ \hline
+      \texttt{\%w4}  & Fourth word register               \\ \hline
+    \end{tabular}
+  \end{center}
+  \caption{Example register references}
+\end{table}
+
+\subsection{Instruction Statements}
+
+Instruction statements begin with an instruction name, zero or
+more source operands, and optionally a right arrow followed by
+zero of more destination operands. Source operands can be either registers,
+literals, or labels. Destination operands must be registers.
+A register can occur more than once as an operand in a statement.
+
+To avoid a combinatorial explosion of instruction names,
+we allow instructions to be polymorphic over operand type.
+``Type" here refers to register, literal or label as well
+as data type such as 32-bit floating point.
+This way, for example, \texttt{ADD \%f1 \%f2 -> \%f2} can be shorthand
+for \texttt{ADD.F \%f1 \%f2 -> \%f2}.
+
+Not all instructions can be applied to all types.
+A more complete specification of our language would include
+a full listing of the permitted data types of each instruction
+(e.g., \texttt{ADD $\alpha$ $\alpha$ -> $\alpha$}). Section 4 gives an informal description of each instruction
+and its permitted operand types.
+
+Example instruction statements:
+
+\begin{verbatim}
+    ADD   %b1 0x01 -> %b1
+    STORE %i4 %w5
+    JUMP  label2
+\end{verbatim}
+
+\subsection{Local labels}
+
+A local label refers to the address of an instruction. Local labels
+appear after the instruction operands. Unlike global
+labels, local labels are written with a colon before.
+
+\begin{verbatim}
+    XOR %s1 %s2 -> %s1 :loop
+\end{verbatim}
+
+\subsection{Comments}
+
+Comments begin with a semicolon and continue until the end of the line.
+
+\begin{verbatim}
+    ADD %w1 0x4 -> %w1 ; Increment the pointer
+\end{verbatim}
+
+\subsection{Function Definition}
+
+Function definition, including argument passing, must be abstracted to avoid
+the complications and variations of platform calling conventions.
+
+Functions are defined by a global label, a parenthesized list of zero
+or more arguments, and a colon. Arguments are received in registers.
+
+\begin{verbatim}
+multiply (%i1 %i2):
+    MUL %i1 %i2 -> %i1
+    RETURN %i1
+
+getName ():
+    LOAD name -> %w1
+    RETURN %w1
+\end{verbatim}
+
+Custom calling conventions and stack management may
+be possible with future additions to the language.

@@ -1,0 +1,44 @@
+\documentclass[10pt]{article}
+\usepackage[top=1in, left=1in, right=1in, bottom=1in]{geometry}
+\usepackage[numbers]{natbib}
+\begin{document}
+\twocolumn
+
+\title{The UNCOL I Never Had}
+\author{Dan Amelang (dan@amelang.net)}
+%\date{}
+\maketitle
+
+\begin{quotation}\small
+``One of the fundamental problems facing the computer profession today is the considerable
+length of time required to develop an effective method of communication with the machine."
+
+-- Strong et al. (1958)
+\end{quotation}
+
+\begin{abstract}
+
+The following is a proposal for a computer-oriented intermediate language.
+The language is designed to assist in creating understandable
+software systems by providing a simple, low-level target for
+compilation, emulation and visualization.
+Underlying the language is a
+minimal RISC-based virtual machine with an unlimited number of strongly-typed registers.
+Both the instruction set and the assembly-like language syntax are fairly
+traditional, though an effort was made to streamline both.
+A small amount of additional syntax and pseudo-instructions were added to achieve
+portability across machine architectures and operating systems.
+
+\end{abstract}
+
+\input{introduction}
+\input{virtual-machine}
+\input{syntax}
+\input{instruction-set}
+\input{hello-world}
+%\include{related-work}
+
+\bibliographystyle{plainnat}
+\bibliography{bib}
+
+\end{document}

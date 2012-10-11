@@ -1,0 +1,84 @@
+\section{Virtual Machine}
+
+Underlying our proposed language is a
+minimal virtual machine that follows the RISC philosophy~\cite{patterson1985reduced}.
+This means that individual instructions only
+perform basic units of work rather than elaborate functions.
+It also implies a register-based ``load-store" architecture,
+which limits memory access to \texttt{LOAD} and \texttt{STORE} instructions.
+Finally, it implies that the memory addressing modes of the \texttt{LOAD} and
+\texttt{STORE} instructions are few and simple. This architecture was chosen
+for our language because the operation of
+of RISC machines is conceptually simple, making them
+appealing targets for compilation, emulation, and visualization.
+
+Like physical machines, the virtual machine does not support ``structured programming."
+That is, program control is linearized -- not determined by blocks
+or tree structures. And like x86 and ARM machines, conditional branching
+depends on flags in a status register, which for portability reasons
+cannot be read or modified directly in our virtual machine.
+
+Physical machines have a limited number of registers, and this number
+can vary significantly from architecture to architecture.
+Rather than commit to a certain number of registers, our virtual
+machine provides an unlimited number of registers. These registers
+may or may not map directly to actual machine registers.
+
+Physical machines have separate register banks for different data types.
+For example, modern machines have registers for memory addresses
+that are separate from the registers for floating point values.
+But there are also several cases where data types will share the same bank.
+For example, registers for memory addresses are also used for signed integer
+values. This is also the case for floating point values and integer SIMD vectors.
+
+To avoid the complication of partially shared register banks,
+our virtual machine provides a separate bank for each data type.
+It is left to the final code generator to select the
+appropriate register bank of the actual machine in each case.
+Given the strict separation of the virtual registers,
+it is only appropriate that we also make them strongly-typed.
+
+Although single static assignment form is convenient for performing
+optimizing code transformations, we chose instead to stay close to actual machine
+register semantics, which allows the same register to be assigned a value multiple times.
+
+Some instruction sets do not always separate source operands from
+destination operands (i.e., a source operand may also double as the destination).
+We chose to keep source and destination separate because this arrangement
+is strictly more flexible. If desired, a source register can also be the
+destination by merely referring to it twice in the same instruction statement.
+We believe that this design makes our language an easier compilation target.
+
+Physical machines have a natural ``word" data type, used primarily
+for working with memory addresses. Our virtual machine has a word register
+type for this purpose. But, because the width of this data type
+varies from machine to machine, we leave its register width undefined.
+When stored in memory, though, we define the word width to be 64-bits.
+This leaves room for the largest word width found in modern machines.
+Optimizing memory use for machines with a narrower word width is not a priority.
+
+Automatic alignment of data in memory is not provided by the language,
+though it is required for correct machine behavior.
+In addition, the endianness of the virtual machine is not defined. This behavior
+is determined by the underlying machine or is chosen by the emulator.
+
+Rather than define or adopt a specific ABI, the virtual machine provides a
+handful of pseudo-instructions that map to platform-specific functionality.
+For example, allocating call stack memory is provided by a pseudo-instruction
+because it requires knowing the direction that the stack grows.
+Also, function calling is provided by a pseudo-instruction because
+it requires knowing how arguments are passed on the call stack.
+This approach allows for interfacing with machine code not compiled
+via our virtual machine abstraction.
+
+Because the virtual machine is very similar to modern hardware,
+machine code generated from our language should not require a
+runtime library. An exception to this is necessary when a fundamental operation
+(e.g., integer division) is not available as an instruction (or as a short
+sequence of instructions) on a particular CPU architecture (e.g., ARM).
+In this case, a function call to a runtime library is needed.
+This library could be from a third-party (e.g., libgcc) or it could
+be our own.
+
+A description of the instruction set of the virtual machine
+is given in Section 4.

@@ -1,0 +1,76 @@
+Organize/group this
+
+* UNCOL
+* ZCODE
+* OCODE (INTCODE, CINTCODE)
+* PL360
+* Janus
+* EM (from Amsterdam Compiler Kit)
+* TDF (TenDRA Distribution Format -- part of the ANDF effort)
+* MLRISC
+* C--
+* LLVM
+* Java bytecode
+* P-code (pascal)
+* CIL
+* C minor/RTL/LTL/Linear (in the Verified Software Toolchain)
+* teaching languages
+* TALs?
+
+Many languages were designed with a specific source language or machine target,
+This de-emphasis of efficiency sets our language apart from almost all others in this class.
+
+None (?) provide a (open source), machine-level (machine model),
+simplicity (design not complicated by optimization concerns),
+source language neutral,
+target-machine neutral.
+
+It should be noted that once effeciency is considered
+a secondary goal, most previous work on intermediate languages
+becomes only vagely/loosely/tenously relavent. retains
+interest, relevance,.
+
+Our design goals of simplicity, machine-level semantics, source language
+independence and target machine independence, particularly at the sacrifice
+of efficiency make asdf unique.
+
+Our interests
+are in an even lower level view of the hardware. Particularly, we are driven by a desire for
+parsimony that such large systems do not support.
+
+Generally, our effort distiguishes itself by targeting a small and similar group of target
+architectures, very close/similar to real assembly language (not customizable, not trees), escewing optimization concerns,
+and focusing primarily on building a component
+this is itself small and simple, and can be used as a component for building a parsimonious
+whole system that is parsimonious.
+
+(be clear about how we differ from the literature)
+
+As disscussed in SEction 1, our goals are ... To our knowledge, no previous
+work on intermediate languages for code generation have had the same goals
+(were driven by same goals, driven by rithless simpligity, nearly tot he exent that
+we do)
+
+(talk about C? dynamic code generation, complex, etc.)
+
+(x86 has lots of old, legacy stuff we don't need)
+(use SSE for floats, ignore the x87 floats)
+(segmentation, addressing modes)
+
+-----------
+
+name, reference,
+design goals
+interesting implementation details
+
+----------------
+
+\section{Related Work}
+
+Intermediate languages for machine code generation have been a topic of research
+for over 50 years. We narrow the scope of this review by
+focusing primarily on languages that were designed independent of source language
+and independent of target machine. Also, we ignore languages designed
+only for internal use within a specific compiler (e.g., GCC's GIMPLE language).
+
+(we care about machine models, now!)
