@@ -20,6 +20,7 @@ into a register and returned.
   RETURN i1
 \end{verbatim}
 For comparison, we include an equivalent program in the LLVM assembly language~\cite{lattner2008llvm}:
+{\small
 \begin{verbatim}
 @hello_string = internal constant [12 x i8] c"hello, world\00"
 
@@ -31,3 +32,4 @@ define i32 @main() {
   ret i32 0
 }
 \end{verbatim}
+}
