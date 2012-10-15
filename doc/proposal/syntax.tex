@@ -172,6 +172,8 @@ the complications and variations of platform calling conventions.
 
 Functions are defined by a global label, a parenthesized list of zero
 or more arguments, and a colon. Arguments are received in registers.
+The body of the function is given by the instruction statements that follow
+until a global label is encountered or end-of-file.
 
 \begin{verbatim}
 @multiply (i1 i2):
