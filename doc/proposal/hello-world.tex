@@ -9,15 +9,15 @@ of the string, then call the \texttt{puts} function with the address
 (which should print the string). Finally, the number zero is loaded
 into a register and returned.
 \begin{verbatim}
-hello_string:
+@hello_string:
   0x68 0x65 0x6c 0x6c 0x6f 0x20
   0x77 0x6f 0x72 0x6c 0x64 0x00
 
-main ():
-  LOAD hello_string -> %w1
-  CALL puts %w1
-  LOAD 0x00 -> %i1
-  RETURN %i1
+@main ():
+  LOAD @hello_string -> w1
+  CALL @puts w1
+  LOAD 0x00 -> i1
+  RETURN i1
 \end{verbatim}
 For comparison, we include an equivalent program in the LLVM assembly language~\cite{lattner2008llvm}:
 \begin{verbatim}

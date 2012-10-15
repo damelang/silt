@@ -7,7 +7,7 @@ We leave the binary encoding of instructions unspecified.
 \subsection{Arithmetic and Bitwise Operations}
 
 Arithmetic and bitwise instructions have two source operands and
-one destination operand. All operands must be the same type.
+one destination operand. All operands must be the same data type.
 The source operands must be two registers or one register and one literal.
 Bitwise and unsigned arithmetic instructions cannot be applied to
 floating point registers. For a list of these instructions,
@@ -39,9 +39,9 @@ see Table \ref{ArithmeticAndBitwiseInstructions}.
 Example instructions:
 
 \begin{verbatim}
-    ADD %i1 %i2  -> %i1
-    MUL %f5 0.5  -> %f6
-    AND %b3 0x0F -> %b3
+    ADD i1 i2   -> i1
+    MUL f5 0.5  -> f6
+    AND b3 0x0F -> b3
 \end{verbatim}
 
 \subsection{Copying to a Register}
@@ -54,9 +54,9 @@ The destination operand must have the same type as the source operand.
 The \texttt{COPY} instruction does not read or write from memory.
 
 \begin{verbatim}
-    COPY %i1  -> %i2
-    COPY 0x00 -> %b9
-    COPY var1 -> %w2
+    COPY i1    -> i2
+    COPY 0x00  -> b9
+    COPY @var1 -> w2
 \end{verbatim}
 
 \subsection{Memory Access}
@@ -65,16 +65,19 @@ The \texttt{LOAD} instruction reads the value in memory
 at the address given by the source operand. The source operand
 must be a word register or a label.
 
+\begin{verbatim}
+    LOAD w3    -> s1
+    LOAD @var1 -> w1
+\end{verbatim}
+
 The \texttt{STORE} instruction writes the value given by
 the first operand into the memory address given by the
 second operand. The second operand must be a word register
 or a label.
 
 \begin{verbatim}
-    LOAD %w3  -> %s1
-    LOAD var1 -> %w1
-    STORE %i2 %w6
-    STORE 0x00 %w1
+    STORE i2 w6
+    STORE 0x00 w1
 \end{verbatim}
 
 \subsection{Control Flow}
@@ -83,7 +86,7 @@ An unconditional branch is performed using the \texttt{JUMP} instruction, which
 takes a local label its only operand.
 
 \begin{verbatim}
-    JUMP loop
+    JUMP .loop
 \end{verbatim}
 
 The \texttt{COMP} instruction compares two values and sets condition flags
@@ -91,8 +94,8 @@ accordingly in an implicit status register. Subsequent conditional branch instru
 form \texttt{JUMP*} use the flags to determine program flow.
 
 \begin{verbatim}
-    COMP  %f4 1.0
-    JUMP< label3
+    COMP  f4 1.0
+    JUMP< .label3
 \end{verbatim}
 
 \subsection{Conversion}
@@ -101,7 +104,7 @@ Conversion between data types is provided by the
 \texttt{CONV} instruction.
 
 \begin{verbatim}
-    CONV %i3 -> %f1
+    CONV i3 -> f1
 \end{verbatim}
 
 \subsection{Stack Memory Allocation}
@@ -114,29 +117,29 @@ be a word register, receives the start address of the
 allocated memory.
 
 \begin{verbatim}
-    ALLOC 0x1 -> %w4
+    ALLOC 0x1 -> w4 ; allocate 1 byte
 \end{verbatim}
 
 \subsection{Function Calling}
 
 The \texttt{CALL} pseudo-instruction provides a platform-independent
 mechanism for calling a function. The first operand must be
-a label or a word register. Zero or more function arguments follow,
+a global label or a word register. Zero or more function arguments follow,
 all of which must be registers. Return values, if any, are received
 by destination registers.
 The assembler does not check that argument types match those
 in the function definition.
 
 \begin{verbatim}
-    CALL getNameForId %i3 -> %w2
-    CALL puts %w2
+    CALL @getNameForId i3 -> w2
+    CALL @puts w2
 \end{verbatim}
 
 The \texttt{RETURN} pseudo-instruction is used to return program
 control, and optionally values also, to the calling function.
 
 \begin{verbatim}
-    RETURN %d2
+    RETURN d2
 \end{verbatim}
 
 In the future, an additional pseudo-instruction \texttt{SYSCALL}
@@ -158,7 +161,7 @@ to rules of the target platform. The \texttt{UNPACK} pseudo-instruction
 does the reverse.
 
 \begin{verbatim}
-    PACK %b4 %w2 %i1 -> %w5
-    CALL func %w5
-    UNPACK %w5 -> %b4 %w2 %i1
+    PACK b4 w2 i1 -> w5
+    CALL @func w5
+    UNPACK w5 -> b4 w2 i1
 \end{verbatim}
