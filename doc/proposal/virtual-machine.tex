@@ -55,7 +55,8 @@ type for this purpose. But, because the width of this data type
 varies from machine to machine, we leave its register width undefined.
 When stored in memory, though, we define the word width to be 64-bits.
 This leaves room for the largest word width found in modern machines.
-Optimizing memory use for machines with a narrower word width is not a priority.
+Optimizing storage of addresses in memory on 32-bit machines
+is not a priority.
 
 Automatic alignment of data in memory is not provided by the language,
 though it is required for correct machine behavior.
