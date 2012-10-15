@@ -97,8 +97,7 @@ ranging from $1$ to $n$. The characters correspond to the type of the register, 
 The word type represents the natural data type of the underlying hardware.
 Registers of this type can hold memory addresses, and address arithmetic
 can be performed using instructions that operate on these registers.
-Although the actual width of a word is machine-dependent,
-we define the width of a word, when stored in memory, to be 64-bits.
+See Section~\ref{sec:word} for more details about the word type.
 
 A separate register bank exists for each register type. The integer
 part of the register reference refers to a specific register
