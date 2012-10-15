@@ -56,18 +56,19 @@ The \texttt{COPY} instruction does not read or write from memory.
 \begin{verbatim}
     COPY i1    -> i2
     COPY 0x00  -> b9
-    COPY @var1 -> w2
+    COPY @var1 -> w2 ; Copy address of @var1
 \end{verbatim}
 
 \subsection{Memory Access}
 
 The \texttt{LOAD} instruction reads the value in memory
 at the address given by the source operand. The source operand
-must be a word register or a label.
+must be a word register or a label. The data type of the
+destination register determines how much is read from memory.
 
 \begin{verbatim}
-    LOAD w3    -> s1
-    LOAD @var1 -> w1
+    LOAD w3    -> s1 ; Load 16-bit value
+    LOAD @var1 -> w1 ; Load word at @var1
 \end{verbatim}
 
 The \texttt{STORE} instruction writes the value given by
@@ -76,8 +77,8 @@ second operand. The second operand must be a word register
 or a label.
 
 \begin{verbatim}
-    STORE i2 w6
-    STORE 0x00 w1
+    STORE i2 w6   ; Write 32-bits at w6
+    STORE 0x00 w1 ; Store a byte at w1
 \end{verbatim}
 
 \subsection{Control Flow}
@@ -95,30 +96,39 @@ form \texttt{JUMP*} use the flags to determine program flow.
 
 \begin{verbatim}
     COMP  f4 1.0
-    JUMP< .label3
+    JUMP< .label3 ; Jump if f4 < 1.0
 \end{verbatim}
 
 \subsection{Conversion}
 
 Conversion between data types is provided by the
-\texttt{CONV} instruction.
+\texttt{CONV} and \texttt{UCONV} instruction.
 
 \begin{verbatim}
-    CONV i3 -> f1
+    CONV  i3 -> f1 ; Signed int to float
+    UCONV i3 -> f2 ; Unsigned int to float
 \end{verbatim}
 
 \subsection{Stack Memory Allocation}
 
 The \texttt{ALLOC} pseudo-instruction allocates memory
-on the stack. The source operand
+on the call stack. The source operand
 specifies the amount of memory to allocate in bytes,
 and must be a literal integer. The destination operand, which must
 be a word register, receives the start address of the
 allocated memory.
 
 \begin{verbatim}
-    ALLOC 0x1 -> w4 ; allocate 1 byte
+    ALLOC 0x1 -> w4 ; Allocate 1 byte on stack
 \end{verbatim}
+
+Successive calls to \texttt{ALLOC} result in adjacent
+allocated portions of memory (though stack growth direction
+is unspecified). At function start, the stack pointer
+is guaranteed to be 128-bit aligned. But, the assembly
+code must pad allocated stack memory as needed for alignment.
+This is because the implicit stack pointer of
+the virtual machine only moves by the amount given to \texttt{ALLOC}.
 
 \subsection{Function Calling}
 
