@@ -1,6 +1,6 @@
 \section{Syntax}
 
-This section contains an informal description
+This section is an informal description
 of a syntax for our proposed language.
 The basic appearance of the language is close
 to that of traditional assembly languages.
@@ -50,11 +50,11 @@ literals with double decimal points.
 Labels are aliases to addresses in memory.
 Labels are identified by
 one or more letters, numbers or symbols. The two
-permitted symbols are {\LARGE \textbf{\texttt{\_}}} and \textbf{\texttt{\$}}.
+permitted symbols are ``{\LARGE \textbf{\texttt{\_}}}" and ``\textbf{\texttt{\$}}".
 Labels are case-sensitive and cannot begin with a digit.
-Local labels must be prefixed with a \textbf{\texttt{.}},
+Local labels must be prefixed with a ``\textbf{\texttt{.}}"
 and can only be referenced within the function in which they are defined.
-Global labels must be prefixed with a \textbf{\textbf{@}}
+Global labels must be prefixed with a ``\textbf{\textbf{@}}"
 and can be referenced from any part of the program.
 
 \subsection{Global data}
@@ -75,7 +75,7 @@ the ASCII characters of the string ``hello world", ending with the \texttt{NULL}
 
 \subsection{Registers}
 
-Register references are composed of one or more characters followed by an integer
+Register references are composed of one or more characters, followed by an integer
 ranging from $1$ to $n$. The characters correspond to the type of the register, as shown below.
 
 \begin{table}[h!]
@@ -101,7 +101,7 @@ See Section~\ref{sec:word} for more details about the word type.
 
 A separate register bank exists for each register type. The integer
 part of the register reference refers to a specific register
-within the bank of that type. Register references start with 1.
+within the bank of that type. Register numbering starts with 1.
 
 \begin{table}[h!]
   \begin{center}
@@ -127,7 +127,7 @@ To avoid a combinatorial explosion of instruction names,
 we allow instructions to be polymorphic over operand type.
 ``Type" here refers to register, literal or label as well
 as data type such as 32-bit floating point.
-This way, for example, \texttt{ADD f1 f2 -> f2} can be shorthand
+This way, \texttt{ADD f1 f2 -> f2} can be thought of as shorthand
 for \texttt{ADD.F f1 f2 -> f2}.
 
 Not all instructions can be applied to all types.

@@ -4,19 +4,23 @@
 minimal virtual machine that follows the RISC philosophy}~\cite{patterson1985reduced}.
 This means that individual machine instructions
 perform basic units of work rather than elaborate functions.
-It also implies a register-based ``load-store" architecture,
-which limits memory access to \texttt{LOAD} and \texttt{STORE} instructions.
+It also implies a register-based architecture that
+is ``load-store", meaning that memory access is limited to
+\texttt{LOAD} and \texttt{STORE} instructions.
 Finally, it implies that the memory addressing modes of the \texttt{LOAD} and
-\texttt{STORE} instructions are few and simple. This architecture was chosen
-for our virtual machine because the operation of
-RISC machines is conceptually simple, making them
-appealing targets for compilation, emulation, and visualization.
+\texttt{STORE} instructions are few and simple.
 
-Like physical machines, the virtual machine processes
-linear sequences of instructions and uses jump or call instructions
-to alter the flow of control. This is in contrast with ``structured programming"
-where code is organized in blocks or as a tree structure.
-As in the case with x86 and ARM CPUs, \textbf{conditional branching depends on flags in
+This design was chosen because the operation of
+RISC machines is conceptually straightforward. In addition,
+generating ARM and x86 code from RISC code is not difficult.
+ARM is basically a RISC architecture, and though x86 is not a RISC architecture,
+a subset of its instruction set can be targeted as if it were.
+
+Like physical machines, \textbf{the virtual machine processes
+linear sequences of instructions} and uses jump or call instructions
+to alter the flow of control. This is in contrast with ``structured programming,"
+with code organized in blocks or as a tree structure.
+As is the case with x86 and ARM CPUs, \textbf{conditional branching depends on flags in
 a status register}. For portability reasons, the status register
 of the virtual machine cannot be read or modified directly.
 
@@ -27,11 +31,11 @@ Layout of multi-byte primitive data types depends on the underlying machine.
 
 Because the virtual machine is very similar to modern hardware,
 \textbf{machine code generated from our language should not require a
-runtime library}. An exception to this is necessary when a fundamental operation
-(e.g., integer division) is not available as an instruction (or as a short
-sequence of instructions) on a particular CPU architecture (e.g., ARM).
-In this case, a function call to a runtime library is needed.
-This library could be from a third-party (e.g., libgcc).
+runtime library or initialization routines}. An exception to this is necessary
+when a fundamental operation (e.g., integer division) is not available as
+an instruction (or as a short sequence of instructions) on a particular
+architecture (e.g., ARM).  In this case, a function call to a runtime
+library is needed. This library could be from a third-party (e.g., libgcc).
 
 \subsection{Registers}
 
@@ -47,10 +51,10 @@ register semantics. Thus, \textbf{our virtual machine allows
 registers to be assigned a value multiple times.}
 
 Modern CPUs segregate register banks by data type.
-For example, modern machines have registers for memory addresses
+For example, modern machines have registers for memory address values
 that are separate from the registers for floating point values.
 But there are also several cases where data types will share the same bank.
-For example, registers for memory addresses are also used for signed integer
+For example, registers for memory address values are also used for signed integer
 values. This is also the case for floating point values and integer SIMD vectors.
 
 To avoid this complication,
@@ -65,7 +69,7 @@ appropriate register bank of the actual machine in each case.
 Physical machines have a natural ``word" data type that is wide enough
 for working with memory address values. For this same purpose,
 our virtual machine has word registers. But, because the width of this data type
-varies from physical machine to physical machine, \textbf{the width of word registers in
+varies from machine to machine, \textbf{the width of word registers in
 our virtual machine is undefined.}
 
 Unfortunately, it is now unclear how much
@@ -74,7 +78,7 @@ We resolve this problem by specifiying that
 \textbf{word values stored in memory are assumed to occupy 64-bits.}
 This leaves enough room for word values of all modern machines.
 Optimizing storage of word values in memory on 32-bit machines
-is not a priority.
+is not a concern.
 
 \subsection{Instructions}
 
@@ -89,9 +93,7 @@ and destination operand in the same instruction.
 
 Rather than define or adopt a specific ABI, virtual machine \textbf{pseudo-instructions
 provide platform-specific functionality}.
-For example, allocating call stack memory is provided by a pseudo-instruction
-because the task requires knowing the direction that the stack grows.
-Also, function calling is provided by a pseudo-instruction because
+For example, function calling is provided by a pseudo-instruction because
 it requires knowing how arguments are passed on the call stack.
 An important advantage of implementing the platform ABI is that it allows for interfacing
 with machine code that was not compiled via our virtual machine abstraction.

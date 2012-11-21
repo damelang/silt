@@ -2,93 +2,76 @@
 
 Software systems today are large and incomprehensible.
 This is due in part to the difficulty
-of interfacing with computer hardware,
-a large part of which is the translation
-of high-level programming languages to the
-low-level machine code of a CPU. This task is
-made even more difficult by the complex and idiosyncratic
-CPU architectures and operating systems of modern times.
+of interfacing with computer hardware.
+In particular, the translation of high-level programming
+languages to low-level machine code
+is a challenge -- one that is exacerbated by
+the complex and idiosyncratic
+computer architectures and operating systems that are common today.
 
-We propose the use of a simple, machine-level
-intermediate language to help make
-the process of machine code generation
-more understandable.
-The language would be independent of any particular
-source language or target machine.
-Code in the language is meant to be
-produced by a compiler, not written by a person.
-Thus, the language is in the same
-spirit as the original UNCOL (UNiversal
-Computer Oriented Language)~\cite{strong1958problem}
-
-Our primary design principle is conceptual parsimony.
-This is because our overarching goal, comprehension,
-is frustrated by conceptual complexity.
+We propose a simple, machine-level intermediate language to make
+the process of compilation more manageable.
+To be generally useful, the language is independent of any
+machine or programming language in particular.
+This makes the language similar to the original
+UNCOL (UNiversal Computer Oriented Language)~\cite{strong1958problem},
+but with a different focus.
 
 \subsection{Advantages}
+%\subsection{Simplifying Language Implementation}
 
-\textbf{Breaking down the machine code generation task} makes
-it more manageable. Compilers can focus on lowering
-the semantics of a program to the machine level,
-without concern for the details of a particular CPU or operating system.
-At the same time, actual machine code generation can be done
-by a separate software component that can focus only on
-register allocation, instruction selection, instruction
-encoding, and the platform ABI.
+\emph{Breaking down the compilation task makes it more manageable.}
+The programming language compiler is responsible for
+lowering the semantics of a program to a machine-level,
+but the machine code generator is left with the job of register allocation,
+instruction selection, implementing platform ABI and so forth.
+%Using a low-level intermediate language leaves compiler writers free to
+%focus on lowering the semantics of a program to a machine-level,
+%without concern for the arbitrary complexity that modern hardware and operating systems impose.
 
-\textbf{Increased portability} is an obvious benefit to using an intermediate language.
-Programming languages can be compiled to multiple machine architectures
-via a single intermediate target language.
-It is our intention to use our intermediate language
-to run programs on the x86 and ARM architectures and
-the Mac OS X, Windows and Linux operating systems (in their more recent forms).
+\emph{A uniform and parsimonious language is an easier compilation target.}
+%This is not because it presents a high-level of computation, but
+%because it is uniform and parsimonious.
+%This in turn enables simplicity in software components that
+These qualities enable simplicity in the software components that
+produce code in our language, and in the components that %(execute or)
+generate machine code from our language.
 
-\textbf{Effective visualization of low-level system behavior} can be a tremendous help
-not only to those first learning the lower-layers of a system, but
-also to those actively working on them.
-A simplified intermediate model of machine-level computation is
-essential to making this happen.
+\emph{A clean, machine-level model of computation is useful.}
+Low-level program execution can be easily virtualized and visualized.
+This can lead to insight that helps not only those first learning
+this layer of a system, but also those actively working at that level.
 
-\textbf{Emulation opportunities} include virtualizing computation,
-easier software bootstrapping, and greater ease of tracking down errors
-in the compilation chain.
+\emph{Decoupling from hardware facilitates portable software.}
+By isolating platform details in one software component,
+portability is more easily achieved.
+Our interest, though, is limited to the most common platforms -- namely
+the x86 and ARM computer architectures and the Mac OS X, Windows and
+Linux operating systems.
 
 \subsection{Not Goals}
 
-To understand the language design, it is also helpful to know the
-things that are not goals.
+Perhaps what most distinguishes our effort
+are the aspirations that we don't have.
 
-\textbf{Efficiency is not a goal}.
+\emph{Efficiency is not a goal}.
 Most intermediate languages for machine code generation
-are designed with efficiency in mind.
-This encompasses efficiency of execution, efficiency
-of memory use, efficiency of compilation, etc.
-We deliberately eschew these concerns
-in our design because the simplest designs
-are much less complex than the more efficient designs, generally.
-This does not rule out, of course, that optimizations be applied before
-code is generated in our language. Nor does it rule out that a translator of
-our language to machine code attempt to produce optimized
-code, similar to what what has been done~\cite{davidson1980design, tanenbaum1982using}.
-The point is that we endeavor to keep efficiency concerns from influencing our
-design so that our primary objectives are met.
+are designed with a focus on efficiency --
+efficient execution, efficient use of memory, efficient compilation.
+We deliberately ignore these concerns because more efficient designs
+are usually more complex.
 
-\textbf{Wide portability is not a goal.}
-Although portability is an advantage of the language, we intent
+\emph{Wide portability is not a goal.}
+Although portability is one purpose of the language, we intend
 to support only the few machine architectures and operating systems
-mentioned above. Limiting the target platforms allows us to make
-many simplifying assumptions in our design.
+mentioned above. Limiting the target platforms allows many important,
+simplifying assumptions to be made.
 
-\textbf{Helping people write assembly code directly is not a goal.}
-Some assembly languages provide features for this.
-Adding such features would only complicate our language
-and goes against the intention that code in the language be
-produced by a compiler. Thus, there are no macro facilities, high-level commands,
-or pseudo-instructions to make it easier for a person to write code.
-
-\textbf{Generality or extensibility is not a goal.}
-For similar reasons, we do not strive to produce a highly general
-or extensible design. As long as the virtual machine provides
-a convenient path to the fundamental machine instructions, other forms of
-computation can be implemented by programming language compilers in
-terms of these instructions.
+\emph{To facilitate writing programs in the language is not a goal.}
+Assembly languages often provide features
+to help people write code.
+As code in our language is intended to be generated
+by a compiler, including such features would only complicate our language.
+Therefore, there are no macro facilities, high-level commands,
+or pseudo-instructions meant to make it easier for a person to write code.
+For this same reason, language extensibility is not a goal.

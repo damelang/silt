@@ -2,7 +2,7 @@
 
 This section presents a mostly complete description
 of the instruction set of the virtual machine.
-We leave the binary encoding of instructions unspecified.
+A binary encoding for instructions is not specified.
 
 \subsection{Arithmetic and Bitwise Operations}
 
@@ -81,54 +81,34 @@ or a label.
     STORE 0x00 w1 ; Store a byte at w1
 \end{verbatim}
 
+\subsection{Conversion}
+
+Conversion between data types is provided by the
+\texttt{CONV}, \texttt{UCONV} and \texttt{CONVU} instructions.
+
+\begin{verbatim}
+    CONV  i3 -> f1 ; Signed int to float
+    UCONV i3 -> f2 ; Unsigned int to float
+    CONVU f2 -> i3 ; Float to unsigned int
+\end{verbatim}
+
 \subsection{Control Flow}
 
 An unconditional branch is performed using the \texttt{JUMP} instruction, which
-takes a local label its only operand.
+takes a local label for its only operand.
 
 \begin{verbatim}
     JUMP .loop
 \end{verbatim}
 
-The \texttt{COMP} instruction compares two values and sets condition flags
-accordingly in an implicit status register. Subsequent conditional branch instructions of the
+The \texttt{COMP} and \texttt{UCOMP} instructions compare two values and set condition flags
+accordingly in the implicit status register. Subsequent conditional branch instructions of the
 form \texttt{JUMP*} use the flags to determine program flow.
 
 \begin{verbatim}
     COMP  f4 1.0
     JUMP< .label3 ; Jump if f4 < 1.0
 \end{verbatim}
-
-\subsection{Conversion}
-
-Conversion between data types is provided by the
-\texttt{CONV} and \texttt{UCONV} instruction.
-
-\begin{verbatim}
-    CONV  i3 -> f1 ; Signed int to float
-    UCONV i3 -> f2 ; Unsigned int to float
-\end{verbatim}
-
-\subsection{Stack Memory Allocation}
-
-The \texttt{ALLOC} pseudo-instruction allocates memory
-on the call stack. The source operand
-specifies the amount of memory to allocate in bytes,
-and must be a literal integer. The destination operand, which must
-be a word register, receives the start address of the
-allocated memory.
-
-\begin{verbatim}
-    ALLOC 0x1 -> w4 ; Allocate 1 byte on stack
-\end{verbatim}
-
-Successive calls to \texttt{ALLOC} result in adjacent
-allocated portions of memory (though stack growth direction
-is unspecified). At function start, the stack pointer
-is guaranteed to be 128-bit aligned. But, the assembly
-code must pad allocated stack memory as needed for alignment.
-This is because the implicit stack pointer of
-the virtual machine only moves by the amount given to \texttt{ALLOC}.
 
 \subsection{Function Calling}
 
@@ -146,7 +126,8 @@ in the function definition.
 \end{verbatim}
 
 The \texttt{RETURN} pseudo-instruction is used to return program
-control, and optionally values also, to the calling function.
+control to the calling function. Zero or more values, given
+as registers, can also be returned.
 
 \begin{verbatim}
     RETURN d2
@@ -164,11 +145,12 @@ requires laying out data in memory according to the
 underlying machine word width and operating system ABI.
 This need arises when calling a C function that accepts
 a pointer to a structure as an argument.
-To this end, the \texttt{PACK} pseudo-instruction takes a list
-of source registers, allocates an appropriate amount of stack memory,
-and copies the register values to the allocated space according
-to rules of the target platform. The \texttt{UNPACK} pseudo-instruction
-does the reverse.
+For this purpose, the \texttt{PACK} pseudo-instruction takes a list
+of source registers, allocates an appropriate amount of memory
+on the call stack, and copies the register values to the allocated
+space according to rules of the target platform. The destination
+operand receives the address of the packed structure.
+The \texttt{UNPACK} pseudo-instruction does the reverse.
 
 \begin{verbatim}
     PACK b4 w2 i1 -> w5
