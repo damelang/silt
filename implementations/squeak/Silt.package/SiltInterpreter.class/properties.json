@@ -1,0 +1,18 @@
+{
+	"category" : "Silt",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "yo 12/6/2012 10:35",
+	"instvars" : [
+		"memory",
+		"globalLabels",
+		"localLabels",
+		"endText",
+		"console" ],
+	"name" : "SiltInterpreter",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }
