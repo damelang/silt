@@ -14,9 +14,9 @@ into a register and returned.
   0x77 0x6f 0x72 0x6c 0x64 0x00
 
 @main ():
-  LOAD @hello_string -> w1
+  COPY @hello_string -> w1
   CALL @puts w1
-  LOAD 0x00 -> i1
+  COPY 0x00 -> i1
   RETURN i1
 \end{verbatim}
 For comparison, we include an equivalent program in the LLVM assembly language~\cite{lattner2008llvm}:
