@@ -1,0 +1,3 @@
+rules
+comment =
+	";" (~nl anything)*

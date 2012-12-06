@@ -1,0 +1,3 @@
+rules
+alphaSym =
+	letter | $_ | $$

@@ -1,0 +1,9 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"build:" : "yo 12/6/2012 00:27",
+		"testAccessors" : "yo 12/6/2012 11:13",
+		"testHello" : "yo 12/6/2012 11:14",
+		"testLookup" : "yo 12/6/2012 11:17",
+		"testMemory" : "yo 12/6/2012 00:52" } }

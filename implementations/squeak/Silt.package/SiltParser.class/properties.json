@@ -1,0 +1,14 @@
+{
+	"category" : "Silt",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "SiltParser",
+	"pools" : [
+		 ],
+	"super" : "OMeta2",
+	"type" : "normal" }
