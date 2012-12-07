@@ -1,3 +1,3 @@
 support
 nl =
-	comment? exactly(Character cr)
+	comment? basicNl
