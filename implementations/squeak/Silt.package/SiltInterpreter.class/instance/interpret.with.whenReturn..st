@@ -10,6 +10,7 @@ interpret: funcDef with: registers whenReturn: aBlock
 		srcValues := srcOps collect: [:reg | self lookup: reg in: registers or: (localLabels at: funcDef ifAbsent: [nil])].
 		dstReg := self getDstRegister: (instructions at: pc).
 
+		pc := pc + 1.
 		inst caseOf: {
 			['return'] -> [aBlock value: srcValues first].
 			['call'] -> [
@@ -30,6 +31,17 @@ interpret: funcDef with: registers whenReturn: aBlock
 				| result |
 				result := self syscallWith: srcValues.
 				dstReg ifNotNil: [self setRegister: dstReg in: registers to: result]].
+			['add'] -> [
+				self setRegister: dstReg in: registers to: srcValues first + srcValues second].
+			['sub'] -> [
+				self setRegister: dstReg in: registers to: srcValues first - srcValues second].
+			['comp'] -> [
+				status := (srcValues first - srcValues second) sign].
+			['jump>'] -> [
+				status = 1 ifTrue: [
+					pc := self lookup: srcOps first in: nil or: (localLabels at: funcDef ifAbsent: [nil])]].
+			['jump!='] -> [
+				status ~= 0 ifTrue: [
+					pc := self lookup: srcOps first in: nil or: (localLabels at: funcDef ifAbsent: [nil])]].
 		}.
-		pc := pc + 1.
 	] repeat.
