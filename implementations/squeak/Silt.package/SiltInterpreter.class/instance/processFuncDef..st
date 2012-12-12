@@ -5,5 +5,5 @@ processFuncDef: func
 	insts withIndexDo: [:inst :index |
 		inst third ifNotNilDo: [:label |
 			(localLabels at: func ifAbsentPut: [Dictionary new])
-				at: label put: index]].
+				at: (self getLabelOfLocalLabel: label) put: index]].
 	^ func

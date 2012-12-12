@@ -9,7 +9,7 @@ testAccessors
 
 	self assert: (vm getFormalArguments: funcDef) = {{#regRef. 'i'. '0'}. {#regRef. 'w'. '0'}}.
 	self assert: (vm getInstructions: funcDef) = #((instruction 'return' nil ((regRef 'i' '0')) nil)).
-	self assert: (vm getLabelOf: funcDef) = 'hello'.
+	self assert: (vm getLabelOfFuncDef: funcDef) = 'hello'.
 	self assert: (vm getOpCode: (vm getInstructions: funcDef) first) = 'return'.
 
 	self assert: (vm getRegIndexOf: {#regRef. 'w'. '1'}) = 1.
