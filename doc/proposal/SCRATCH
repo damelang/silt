@@ -1,0 +1,66 @@
+Advantages/things you can do with UNCOL:
+  - machine code generation
+  - visualization of machine-level execution of programs
+  - virtualization, emulation, interpreter (suspended computation,
+      forward and reverse execution, etc.)
+  - easier low-level debugging
+  - foreign function interface
+  - compilation chain bootstrapping
+  - education/learning computer architecture/low-level programming
+  - distributed computing/mobile code
+  - future computer architectures
+      ``Although not one of our goals, it is possible to use the
+      language as the basis for an actual machine language.
+      Chuck Thacker has suggested that someone define an assembly
+      language for his `Tiny Computer'~\cite{thacker-pov}, which
+      has many similarities to our virtual machine."
+-----------------------------------------------------------------
+Do these go w/out saying?
+  - 8 bit bytes
+  - byte addressable, linear memory
+-----------------------------------------------------------------
+(UPDATE: don't want a stack pointer exposed anymore)
+One exception to the above syntax is the stack pointer register,
+which is simply referred to as \texttt{sp}. The stack pointer register
+is a word register and can be used as such indiscriminately.
+...
+Finally, \textbf{a dedicated stack pointer register is provided
+for allocating memory on the call stack.}
+The stack of the virtual machine grows downward, as is the case on
+practically all computing platforms today.
+The address in the stack pointer
+register is guaranteed to be aligned to 128-bits (256-bits?) on each function entry.
+-----------------------------------------------------------------
+Of course, a compiler that targets our language is free to apply
+optimizations before generating code in our language.
+Likewise, a translator of our language to machine code
+is also free to produce optimized code.
+-----------------------------------------------------------------
+Extensibility is not a goal.
+The language is only meant to be a thin abstraction
+of basic machine-level capabilities.
+More sophisticated forms of computation
+should be provided by separate, higher-level programming languages
+which are compiled down to our language.
+-----------------------------------------------------------------
+Why make the language so low level?:
+Leave as little work as possible for the actual machine code generation.
+Just enough to be portable.
+Simple to emulate, visualize, etc.
+Easier to understand the low-level workings.
+-----------------------------------------------------------------
+Provide an "escape hatch" to machine-specific assembly?
+-----------------------------------------------------------------
+Talk about a new type of word register for garbage collected objects.
+-----------------------------------------------------------------
+Talk about runtime API for querying silt-level metadata (where
+certain silt registers lie in memory, etc.), useful for runtime debugging
+and garbage collection.
+-----------------------------------------------------------------
+(the old abstract)
+The following is a proposal for a low-level intermediate language
+to assist in the task of machine code generation. (more than that)
+The language would provide a simple and uniform abtraction
+over the complex and idiosyncratic hardware and operating system.
+As an execution target, the language would facilitate the creation
+of parsimonious and portable software systems.

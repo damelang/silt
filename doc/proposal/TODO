@@ -1,0 +1,92 @@
+- mention that registers are function scoped? Automatically saved and restored,
+  according to platform ABI.
+  - register values are preserved across function calls (pass by value)
+    they are scoped, specific to function. Local.
+  - make clear that functions are more than just a global label and instructions.
+    The parentheses (for the function argument list) are the indication.
+
+- question of when can values other than registers be used as operands?
+  For example: using literals in several places is handy, using labels, etc.
+  Function call arguments, RETURN instructions, etc.
+  SOLVED: be "pure". see notes (way) below. MUST UPDATE DOCUMENT!
+
+- The name of the COPY instruction is a bit strange. LOAD is also just a copy, right?...just
+  from memory instead of from another register.
+  But the name MOVE is weird, as no values actually leave anywhere.
+  SET is weird, but...must think.
+  Maybe use COPY for register to register, SET for literal/label
+  to register.
+
+- use "*" to denote memory access? e.g., *w3
+    LOAD  *w3 -> i1
+    STORE b3  -> *w1
+  What about the first operand of CALL? CALL *w8, or CALL w8? CALL *@myfunction ?
+  What advantage does this provide? Besides allowing STORE to look a
+  little more uniform, since it can use an arrow and a dest operand.
+  (otherwise, STORE just has two source operands).
+
+- what about ADD.F, ADD.I, ADD.W etc. Should we *really* have polymorphic instructions, and
+  to what extent? LOAD.F, STORE.F? Will these instruction be used internally
+  in an UNCOL compiler anyway? (Maybe not for an interpreter, though)
+
+- add Long's instruction spec as appendix? see (way) below
+
+- The language is useful for many other things, we're not after only machine code generation.
+  So maybe there is too much talk about machine code generation in the proposal.
+  - see abstract
+  - see introduction
+  - see ...
+
+- commit related work stuff
+    - make sure each .txt file has a decent paragraph (and each related topic has a .txt file)
+    - group the paragraphs (by time? by approach?)
+    - finish intro to related work
+
+---------------------------------------------------------------------------------------------
+
+r = register
+l = literal
+m = label (i.e., a named memory address)
+
+(it would be nice to specify exactly what types of registers
+are allowed throughout, e.g., don't use a float as source
+operand in UCONV, etc.)
+
+(in this group, each "r" must be same type of register)
+ADD  r r -> r
+SUB  r r -> r
+MUL  r r -> r
+DIV  r r -> r
+UDIV r r -> r
+REM  r r -> r
+UREM r r -> r
+AND  r r -> r
+OR   r r -> r
+XOR  r r -> r
+SHL  r r -> r
+SHR  r r -> r
+ASHR r r -> r
+
+COPY r -> r
+SET  lm -> r ; Instead of overloading COPY?
+LOAD r -> r ; first operand must be word type
+STORE r r ; maybe STORE r -> *r ; maybe STORE r => r with "thick" arrow?; second operand must be word
+
+CONV r -> r
+UCONV r -> r
+CONVU r -> r
+
+COMP r -> r
+UCOMP r -> r
+
+JUMP mr ; or have separate JUMPI (jump indirect, or IJUMP) for register variant?
+JUMP* mr ;
+
+CALL mr r* -> r ; if register variant is used, first operand must be word register
+; CALLI for register variant?
+RETURN r
+
+ALLOC l -> r ; must be word register
+
+PACK r* -> r ; dest must be word register
+UNPACK r -> r* ; source must be word register

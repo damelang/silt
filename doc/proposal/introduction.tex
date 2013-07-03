@@ -18,21 +18,15 @@ UNCOL (UNiversal Computer Oriented Language)~\cite{strong1958problem},
 but with a different focus.
 
 \subsection{Advantages}
-%\subsection{Simplifying Language Implementation}
 
 \emph{Breaking down the compilation task makes it more manageable.}
-The programming language compiler is responsible for
-lowering the semantics of a program to a machine-level,
-but the machine code generator is left with the job of register allocation,
-instruction selection, implementing platform ABI and so forth.
-%Using a low-level intermediate language leaves compiler writers free to
-%focus on lowering the semantics of a program to a machine-level,
-%without concern for the arbitrary complexity that modern hardware and operating systems impose.
+A low-level intermediate language frees compiler writers
+to focus only on lowering the semantics of a program to a machine level.
+The arbitrary details of the hardware and operating system
+are relegated to a separate software component that performs
+register allocation, instruction selection, platform ABI implementation and so forth.
 
 \emph{A uniform and parsimonious language is an easier compilation target.}
-%This is not because it presents a high-level of computation, but
-%because it is uniform and parsimonious.
-%This in turn enables simplicity in software components that
 These qualities enable simplicity in the software components that
 produce code in our language, and in the components that %(execute or)
 generate machine code from our language.

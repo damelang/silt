@@ -8,7 +8,8 @@ A binary encoding for instructions is not specified.
 
 Arithmetic and bitwise instructions have two source operands and
 one destination operand. All operands must be the same data type.
-The source operands must be two registers or one register and one literal.
+%The source operands must be registers or literals.
+%The source operands must be two registers or one register and one literal.
 Bitwise and unsigned arithmetic instructions cannot be applied to
 floating point registers. For a list of these instructions,
 see Table \ref{ArithmeticAndBitwiseInstructions}.
@@ -24,7 +25,7 @@ see Table \ref{ArithmeticAndBitwiseInstructions}.
       UDIV & Unsigned division      \\ \hline
       REM  & Remainder              \\ \hline
       UREM & Unsigned remainder     \\ \hline
-      AND  & Logical conjunction     \\ \hline
+      AND  & Logical conjunction    \\ \hline
       OR   & Logical disjunction    \\ \hline
       XOR  & Exclusive disjunction  \\ \hline
       SHL  & Bit shift left         \\ \hline
@@ -64,7 +65,7 @@ The \texttt{COPY} instruction does not read or write from memory.
 The \texttt{LOAD} instruction reads the value in memory
 at the address given by the source operand. The source operand
 must be a word register or a label. The data type of the
-destination register determines how much is read from memory.
+destination register determines how many bytes are read from memory.
 
 \begin{verbatim}
     LOAD w3    -> s1 ; Load 16-bit value
@@ -81,7 +82,7 @@ or a label.
     STORE 0x00 w1 ; Store a byte at w1
 \end{verbatim}
 
-\subsection{Conversion}
+\subsection{Data Conversion}
 
 Conversion between data types is provided by the
 \texttt{CONV}, \texttt{UCONV} and \texttt{CONVU} instructions.
@@ -102,7 +103,8 @@ takes a local label for its only operand.
 \end{verbatim}
 
 The \texttt{COMP} and \texttt{UCOMP} instructions compare two values and set condition flags
-accordingly in the implicit status register. Subsequent conditional branch instructions of the
+accordingly in the implicit status register. The two values must be the same data type.
+Subsequent conditional branch instructions of the
 form \texttt{JUMP*} use the flags to determine program flow.
 
 \begin{verbatim}
@@ -110,15 +112,15 @@ form \texttt{JUMP*} use the flags to determine program flow.
     JUMP< .label3 ; Jump if f4 < 1.0
 \end{verbatim}
 
-\subsection{Function Calling}
+\subsection{Function Calls}
 
 The \texttt{CALL} pseudo-instruction provides a platform-independent
-mechanism for calling a function. The first operand must be
-a global label or a word register. Zero or more function arguments follow,
-all of which must be registers. Return values, if any, are received
-by destination registers.
-The assembler does not check that argument types match those
-in the function definition.
+mechanism for calling a function. The first source operand must be
+a global label or a word register. Zero or more function arguments follow as
+additional source operands, all of which must be registers. A return value can be captured
+by a destination operand.
+The assembler does not check that the types of arguments and return values match those
+in the function definitions.
 
 \begin{verbatim}
     CALL @getNameForId i3 -> w2
@@ -137,6 +139,27 @@ In the future, an additional pseudo-instruction \texttt{SYSCALL}
 may be defined for interfacing with the operating system.
 For functional programming, a \texttt{TAILCALL} pseudo-instruction
 could also be defined.
+
+\subsection{Stack Memory Allocation}
+
+The \texttt{ALLOC} pseudo-instruction allocates memory
+on the call stack. The source operand
+specifies the amount of memory to allocate in bytes,
+and must be a literal integer. The destination operand, which must
+be a word register, receives the start address of the
+allocated memory.
+
+\begin{verbatim}
+    ALLOC 0x1 -> w4 ; Allocate 1 byte on stack
+\end{verbatim}
+
+Successive calls to \texttt{ALLOC} result in adjacent
+allocated portions of memory (though stack growth direction
+is unspecified). At function start, the stack pointer
+is guaranteed to be 128-bit aligned. But, the assembly
+code must pad allocated stack memory as needed for alignment.
+This is because the implicit stack pointer of
+the virtual machine only moves by the amount given to \texttt{ALLOC}.
 
 \subsection{Platform-Specific Data Layout}
 

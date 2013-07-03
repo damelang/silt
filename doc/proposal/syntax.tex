@@ -14,8 +14,8 @@ Integer literals are written in hexadecimal format, with a leading
 \textbf{\texttt{0x}}. The width (i.e., size) of the literal value is
 inferred from the number of characters. Literals can be 8-bits, 16-bits,
 32-bits or 64-bits wide. This syntax is used for both signed and unsigned values.
-In the generated code, the byte ordering of multi-byte values follows the endianness
-of the target platform.
+In the generated code, the byte ordering of multi-byte values depends on
+the endianness of the target platform.
 
 \begin{table}[h!]
   \begin{center}
@@ -94,14 +94,14 @@ ranging from $1$ to $n$. The characters correspond to the type of the register, 
   \caption{Register type identifiers}
 \end{table}
 
-The word type represents the natural data type of the underlying hardware.
+The ``w" (for ``word") register type represents the natural data type of the underlying hardware.
 Registers of this type can hold memory addresses, and address arithmetic
 can be performed using instructions that operate on these registers.
-See Section~\ref{sec:word} for more details about the word type.
+See Section~\ref{sec:word} for more details about the word data type.
 
 A separate register bank exists for each register type. The integer
 part of the register reference refers to a specific register
-within the bank of that type. Register numbering starts with 1.
+within the bank of that type. Register numbering starts with $1$.
 
 \begin{table}[h!]
   \begin{center}
@@ -117,11 +117,10 @@ within the bank of that type. Register numbering starts with 1.
 
 \subsection{Instruction Statements}
 
-Instruction statements begin with an instruction name, zero or
+Instruction statements consist of an instruction name, zero or
 more source operands, and optionally a right arrow followed by
-zero of more destination operands. Source operands can be either registers,
-literals, or labels. Destination operands must be registers.
-A register can occur more than once as an operand in a statement.
+one or more destination operands. Source operands can be either registers,
+literals, or labels.
 
 To avoid a combinatorial explosion of instruction names,
 we allow instructions to be polymorphic over operand type.

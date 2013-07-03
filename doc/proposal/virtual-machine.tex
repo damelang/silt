@@ -3,7 +3,7 @@
 \textbf{Underlying our proposed language is a
 minimal virtual machine that follows the RISC philosophy}~\cite{patterson1985reduced}.
 This means that individual machine instructions
-perform basic units of work rather than elaborate functions.
+perform only basic units of work.
 It also implies a register-based architecture that
 is ``load-store", meaning that memory access is limited to
 \texttt{LOAD} and \texttt{STORE} instructions.
@@ -88,7 +88,7 @@ in some cases).
 This can make the machine a more difficult compilation target.
 Thus, \textbf{source and destination operands are separate} in our
 virtual machine instructions.
-Of course, it is possible to specify a register as both a source
+Of course, it is possible to use a register as both a source
 and destination operand in the same instruction.
 
 Rather than define or adopt a specific ABI, virtual machine \textbf{pseudo-instructions
