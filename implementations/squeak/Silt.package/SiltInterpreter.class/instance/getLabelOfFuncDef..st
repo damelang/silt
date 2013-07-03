@@ -1,3 +1,3 @@
 accessors
-getLabelOf: def
+getLabelOfFuncDef: def
 	^ def second second.

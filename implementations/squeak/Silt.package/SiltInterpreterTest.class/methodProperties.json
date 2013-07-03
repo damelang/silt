@@ -3,7 +3,7 @@
 		 },
 	"instance" : {
 		"build:" : "yo 12/6/2012 00:27",
-		"testAccessors" : "yo 12/6/2012 11:13",
+		"testAccessors" : "yo 12/11/2012 15:23",
 		"testHello" : "yo 12/6/2012 11:14",
 		"testLookup" : "yo 12/6/2012 11:17",
 		"testMemory" : "yo 12/6/2012 00:52" } }
