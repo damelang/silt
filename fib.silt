@@ -1,0 +1,17 @@
+@fib (i1):
+  SET 0x01 -> i2
+  COMP i1 i2
+  JUMP> .L1
+  RETURN i1
+.L1:
+  SUB i1 i2 -> i1
+  CALL @fib i1 -> i3
+  SUB i1 i2 -> i1
+  CALL @fib i1 -> i4
+  ADD i3 i4 -> i3
+  RETURN i3
+
+@main ():
+  SET 0x05 -> i1
+  CALL @fib i1 -> i1
+  RETURN i1
